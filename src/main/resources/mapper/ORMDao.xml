@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.dao.ORMDao">
+
+    <resultMap id="StudentResultMap" type="com.company.dao.pojo.Student">
+        <id property="sid" column="SID" jdbcType="INTEGER"></id>
+        <result property="sname" column="SNAME" jdbcType="VARCHAR"></result>
+        <association property="dept" javaType="com.company.dao.pojo.Dept">
+            <id property="did" column="DID" jdbcType="INTEGER"></id>
+            <result property="dname" column="DNAME" jdbcType="VARCHAR"></result>
+        </association>
+    </resultMap>
+
+    <resultMap id="DeptResultMap" type="com.company.dao.pojo.Dept">
+        <id property="did" column="DID" jdbcType="INTEGER"></id>
+        <result property="dname" column="DNAME" jdbcType="VARCHAR"></result>
+        <collection property="stus" ofType="com.company.dao.pojo.Student">
+            <id property="sid" column="SID" jdbcType="INTEGER"></id>
+            <result property="sname" column="SNAME" jdbcType="VARCHAR"></result>
+        </collection>
+    </resultMap>
+
+    <resultMap id="ScoreResultMap" type="com.company.dao.pojo.StudentM2M">
+        <id property="sid" column="SID" jdbcType="INTEGER"></id>
+        <result property="sname" column="SNAME" jdbcType="VARCHAR"></result>
+        <collection property="scores" ofType="com.company.dao.pojo.Score">
+            <id property="scid" column="SCID" jdbcType="INTEGER"></id>
+            <result property="score" column="SCORE" jdbcType="DOUBLE"></result>
+            <association property="course" javaType="com.company.dao.pojo.Course">
+                <id property="cid" column="CID" jdbcType="INTEGER"></id>
+                <result property="cname" column="CNAME" jdbcType="VARCHAR"></result>
+            </association>
+        </collection>
+    </resultMap>
+
+
+    <select id="findBySid" resultMap="StudentResultMap">
+      select s.sid,s.sname,d.did,d.dname
+      from t_student s left join t_dept d on s.did=d.did
+      where sid=#{sid}
+    </select>
+
+    <select id="findByDid" resultMap="DeptResultMap">
+      select d.did,d.dname,s.sid,s.sname
+      from t_dept d left join t_student s on d.did=s.did
+      where d.did=#{did}
+    </select>
+
+    <select id="findMany2Many" resultMap="ScoreResultMap">
+      select s.sid,s.sname,c.cid,c.cname,sc.scid,sc.score from
+      (t_student s left join t_score sc on s.sid=sc.sid) left join t_course c on sc.cid=c.cid
+      where s.sid=#{sid}
+    </select>
+
+</mapper>
