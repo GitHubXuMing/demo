@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 public interface UserDao {
-    User findById(Integer userId);
+    User findById(@Param("userId") Integer userId,@Param("random") Double random);
     List<User> findAll();
     List<User> findByName(@Param("username") String username);
     int save(User user);

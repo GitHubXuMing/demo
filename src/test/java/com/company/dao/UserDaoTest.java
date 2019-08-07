@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -21,11 +22,11 @@ public class UserDaoTest {
 
     @Test
     public void findById() {
-        User user = userDao.findById(2);
-        TestCase.assertNotNull(user);
-        TestCase.assertEquals("qian",user.getUsername());
-        TestCase.assertTrue(user.getId()==2);
-        System.err.println(user);
+        User user = userDao.findById(2,new Random().nextDouble());
+
+        System.err.println("1:"+user);
+
+        System.err.println("2:"+userDao.findById(2,new Random().nextDouble()));
     }
 
     @Test
